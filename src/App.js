@@ -9,8 +9,6 @@ import Settings from "./Settings";
 import { PractiseCards } from "./PractiseCards";
 import NotFound from "./404";
 
-import { Fetch } from "./Fetch";
-
 import { Add } from "./Edit";
 
 import "./layout.css";
@@ -240,7 +238,6 @@ function App() {
             }
           />
           <Route path="*" element={<NotFound />} />
-          <Route path="fetch" element={<Fetch />} />
         </Routes>
       </BrowserRouter>
     </div>
