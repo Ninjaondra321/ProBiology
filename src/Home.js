@@ -83,8 +83,8 @@ const Home = () => {
         L_link=""
       />
       <div className="content ">
-        {radromZRybizu < 0.1 && <h1>Baba z rybízu</h1>}
-        {radromZRybizu > 0.1 && <h1>ProBiology</h1>}
+        {radromZRybizu < 0.05 && <h1>Baba z rybízu</h1>}
+        {radromZRybizu > 0.05 && <h1>ProBiology</h1>}
 
         <h3 className="no-padding-top">{timePodnadpis}</h3>
 
