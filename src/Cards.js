@@ -23,7 +23,6 @@ export const LessonCard = ({id, title, language}) => {
 export const NewLessonCard = () => {
 
     // Generate id
-    console.log('Generating an ID for this lesson')
     let i = 0
     while (true) {
       i++;
