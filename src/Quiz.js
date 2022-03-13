@@ -57,11 +57,14 @@ export const QuizWidget = ({ dict, baseURL }) => {
 
   const [started, setStarted] = useState(false);
 
-  const [srcURL, setSrcURL] = useState("/0.png");
+  const [LeftSrcURL, setLeftSrcURL] = useState('')
+  const [RightsrcURL, setRightSrcURL] = useState("");
   const [answers, setAnswers] = useState([]);
   const [correctID, setCorrectID] = useState(99);
 
   const [isNextShown, setIsNextShown] = useState(false);
+
+  const [rightPicIsShown, setRightPicIsShown] = useState(true)
 
   // Generate random number
   function genRandomID(keepTrack) {
@@ -121,9 +124,27 @@ export const QuizWidget = ({ dict, baseURL }) => {
     answers.splice(correctID, 0, dict[currentID].title);
     srcURLL = dict[currentID].src;
 
+    let nextSrcIdk = dict[recentWordsID[recentWordsID.length- 1]].src
+
     setAnswers(answers);
-    setSrcURL(srcURLL);
+
+    if (LeftSrcURL === "" && RightsrcURL === "") {
+      setLeftSrcURL(srcURLL)
+      setRightSrcURL(srcURLL)
+    }
+
+    if (!rightPicIsShown) {
+      setLeftSrcURL(nextSrcIdk)
+      setRightPicIsShown(!rightPicIsShown)
+    } else {
+      setRightSrcURL(nextSrcIdk)
+      setRightPicIsShown(!rightPicIsShown)
+    }
+    
+
+
     return { answers: answers, correctID: correctID, srcURL: srcURLL };
+
   }
 
   function revealCorrectAnswer(index) {
@@ -169,7 +190,12 @@ export const QuizWidget = ({ dict, baseURL }) => {
 
     setIsNextShown(false);
 
-    const CURRENTID = genRandomID(true);
+    if (recentWordsID.length === 0) {genRandomID(true)} 
+    genRandomID(true)
+
+    
+    const CURRENTID = recentWordsID[recentWordsID.length - 2];
+
 
     const { answers, correctID, title } = getAnswers(CURRENTID);
 
@@ -193,7 +219,8 @@ export const QuizWidget = ({ dict, baseURL }) => {
   return (
     <div className="content content-padding">
       <div className="lesson-card-one-item uvnitr-obrazek   center bg-green">
-        <img  src={"" + baseURL + srcURL} alt="obrazek nebo tak něco "  className="omezeni-obrazkuuu" />
+        <img  src={"" + baseURL + LeftSrcURL} alt="obrazek nebo tak něco "  className={rightPicIsShown ? "omezeni-obrazkuuu hidden" : "omezeni-obrazkuuu " } />
+        <img  src={"" + baseURL + RightsrcURL} alt="obrazek nebo tak něco "  className={!rightPicIsShown ? "omezeni-obrazkuuu hidden" : "omezeni-obrazkuuu "} />
 
       </div>
 
@@ -240,6 +267,7 @@ export const QuizWidget = ({ dict, baseURL }) => {
           ></div>
         )}
       </div>
+
     </div>
   );
 };

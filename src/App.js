@@ -207,6 +207,11 @@ function App() {
   }
 
   if (localStorage.length < 2) {
+    localStorage.setItem("THEME", JSON.stringify({COLOR: "color02",
+    STYLE: "gradient",
+    THEME: "light"}))
+
+
     localStorage.setItem(1, JSON.stringify({id: "1",
     listURL: "https://raw.githubusercontent.com/Ninjaondra321/pro-biology-sources/master/pro-karla-prohlizece/info.json",
     rocnik: "2.Roč",
