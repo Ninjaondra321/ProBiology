@@ -349,3 +349,12 @@ body {
 
 /*--- REFORMACE STYLŮ ---- */
 
+img.hidden {
+  height: 0 !important;
+  width: 0 !important;
+}
+
+.PractiseCard h1.hidden {
+  width: 0 !important;
+  height: 34px;
+}

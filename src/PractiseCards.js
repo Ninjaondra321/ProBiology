@@ -1,83 +1,223 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import NavBar from './NavBar';
 import { PractiseCard } from './Cards';
 
+
 export const PractiseCards = () => {
-    const [Nadpis, setNadpis] = useState('Není nastaveno');
-    const [Podnadpis, setPodnadpis] = useState('Není nastaveno');
-   const [isRevealedAnswer, setIsRevealedAnswer] = useState(false);
-    const [isSetted, setIsSetted] = useState(false);
-    const [ListOfPreviousQuiestionIDs, setListOfPreviousQuiestionIDs] = useState([]);
+    let { id } = useParams();
+    let obj = JSON.parse(localStorage.getItem(id));
+  
+    const title = obj.title;
+  
+    const [dict, setDict] = useState(null);
+    const [baseURL, setBaseURL] = useState(null);
+  
+    useEffect(() => {
+      fetch(obj.listURL)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+          console.log(data.title);
+          setDict(data.dict);
+          setBaseURL(data.baseURL);
+        });
+    }, []);
+  
+    console.log(dict);
+  
+    return (
+      <>
+        <NavBar
+          M_txt={title}
+          L_icon="arrow-simple-left"
+          R_icon="card"
+          L_link="/"
+          R_link={"/quiz/" + id}
+        />
 
-    // A bit of experiment here
-    const [StringOfPreviousIDs, setStringOfPreviousIDs] = useState('');
+        {dict && <PractiseCardsWidget dict={dict} baseURL={baseURL} />}
 
-    console.log('Ahoj - Practise Cards')
-
-    let {id} = useParams()
-    let obj = JSON.parse(localStorage.getItem(id))
-    let dict = obj.dict
-
-    function generateNextSet () {
-        console.log('Ahoj - generate next set')
-        console.log(dict)
-        console.log(dict.length)
-        do {
-            var idd  = Math.floor(Math.random() * dict.length)
-            console.log(idd)
-        }  while (StringOfPreviousIDs.includes('-' + idd))
-
-        setStringOfPreviousIDs('' + StringOfPreviousIDs + '-' + idd )
+      </>
+    );
+  
+}
 
 
+export const PractiseCardsWidget = ({dict, baseURL}) => {
+    const [recentWordsID, setRecentWordsID] = useState([]);
 
-        if (StringOfPreviousIDs.split('-').length  == dict.length - 1) {
-            setStringOfPreviousIDs(StringOfPreviousIDs)
-            // generate new string
-            let finalString = ''
-            for (let i = 2; i < StringOfPreviousIDs.length - 2; i++) {
-                const element = StringOfPreviousIDs[i];
-                finalString += element
-            }
-            setStringOfPreviousIDs(finalString)
+  console.warn(dict);
+  console.warn(baseURL);
+
+
+  const [started, setStarted] = useState(false);
+
+  const [LeftSrcURL, setLeftSrcURL] = useState('')
+  const [RightsrcURL, setRightSrcURL] = useState("");
+
+  const [LeftAnswer, setLeftAnswer] = useState("");
+  const [RightAnswer, setRightAnswer] = useState("");
+
+  const [isNextShown, setIsNextShown] = useState(false);
+
+  const [rightPicIsShown, setRightPicIsShown] = useState(true)
+
+  // Generate random number
+  function genRandomID(keepTrack) {
+    var copy = recentWordsID;
+
+    // Maintain the lenght
+    if (recentWordsID.length === 4) {
+      copy.shift();
+    }
+
+    function myIncludes(numero) {
+      if (copy.length === 0) {
+        return false;
+      }
+      for (let i = 0; i < copy.length; i++) {
+        if (copy[i] == numero) {
+          return true;
         }
-
-
-        if (Math.random() > 0.5) {
-            setNadpis(dict[idd].WordCzech)
-            setPodnadpis(dict[idd].WordOther)
-        } else {
-            setNadpis(dict[idd].WordOther)
-            setPodnadpis(dict[idd].WordCzech)
-        }
-
-
-        setIsRevealedAnswer(false)
-        console.warn(StringOfPreviousIDs)
-
+      }
+      return false;
     }
 
-    function revealAnswer () {
-        console.log('Ahoj - reveal answer')
-        setIsRevealedAnswer(true)
+    // Generate random number
+    let number = undefined;
+    do {
+      number = Math.floor(Math.random() * dict.length);
+    } while (myIncludes(number.toString()) && keepTrack);
+
+    // Add the number to the KeepTrack array
+    if (keepTrack) {
+      copy.push(number);
     }
 
-    if (!isSetted) {
-        generateNextSet()
-        setIsSetted(true)
+    return number;
+  }
+
+  function getAnswers(currentID) {
+    // Generate random answerIDs
+    let wrong_answersID = [];
+    while (wrong_answersID.length < 3) {
+      let n = genRandomID(false);
+      if (n !== currentID && !wrong_answersID.includes(n)) {
+        wrong_answersID.push(n);
+      }
     }
 
-    console.info(isRevealedAnswer)
-  return <div className="content content-padding">
-      <NavBar L_icon='arrow-simple-left' L_link='/' R_icon='form' M_txt={obj.title} R_link={'/quiz/' + id} />
+    // Use IDs to create verbal answers
+    let srcURLL = "";
+    let answer = "";
 
-        <PractiseCard title={Nadpis} translation={Podnadpis} isRevealed={isRevealedAnswer} />
+    
 
-        <div className="center-right fine-padding">
-        {!isRevealedAnswer && <div className="icon i-turn-card" onClick={() => setIsRevealedAnswer(true)}></div>}
-        {isRevealedAnswer && <div className="icon i-arrow-simple-right" onClick={() => generateNextSet()}></div>}
+    
+    srcURLL = dict[currentID].src;
+    answer = dict[currentID].title;
+
+    let nextSrcIdk = dict[recentWordsID[recentWordsID.length- 1]].src
+
+
+    if (LeftSrcURL === "" && RightsrcURL === "") {
+      setLeftSrcURL(srcURLL)
+      setRightSrcURL(srcURLL)
+      setRightAnswer(answer)
+    }
+
+    if (!rightPicIsShown) {
+      setLeftSrcURL(nextSrcIdk)
+      setRightPicIsShown(!rightPicIsShown)
+      setRightAnswer(answer)
+    } else {
+    setLeftAnswer(answer)
+      setRightSrcURL(nextSrcIdk)
+      setRightPicIsShown(!rightPicIsShown)
+    }
+    
+
+
+    return {answer: answer, srcURL: srcURLL };
+
+  }
+
+  function revealCorrectAnswer() {
+    setIsNextShown(true);
+
+  }
+
+  function nextQuiestion() {
+
+    setIsNextShown(false);
+
+    if (recentWordsID.length === 0) {genRandomID(true)} 
+    genRandomID(true)
+
+    
+    const CURRENTID = recentWordsID[recentWordsID.length - 2];
+
+
+    const { answers, correctID, title } = getAnswers(CURRENTID);
+
+    return {
+      answers: answers,
+      CURRENTID: CURRENTID,
+      correctID: correctID,
+      title: title,
+    };
+  }
+
+  if (!started) {
+    console.log("zacinam hru");
+    const { answers, CURRENTID, correctID, title } = nextQuiestion();
+    setStarted(true);
+  } else {
+    console.log("aspon neco");
+    console.log(recentWordsID);
+  }
+
+  console.info("halabalahoeiahi")
+  console.info(LeftAnswer)
+  console.info(RightAnswer)
+
+  return (
+    <div className="content content-padding">
+      <div className="PractiseCard">
+          <div className="center " style={{"padding-top": "10px"}}>
+            <img  src={"" + baseURL + LeftSrcURL} alt="obrazek nebo tak něco"  className={rightPicIsShown ? "omezeni-obrazkuuu hidden" : "omezeni-obrazkuuu " } />
+            <img  src={"" + baseURL + RightsrcURL} alt="obrazek nebo tak něco"  className={!rightPicIsShown ? "omezeni-obrazkuuu hidden" : "omezeni-obrazkuuu "} />
+          </div>
+        
+        <div className="cetner" >
+            <h1 className={!isNextShown ? "hidden card-subtitle center" : "card-subtitle center" }>{rightPicIsShown ? RightAnswer : LeftAnswer}</h1>
         </div>
+        
       </div>
+
+
+
+
+      <div className="center-right fine-padding">
+        {isNextShown && (
+          <div
+            className={"icon i-arrow-simple-right  "}
+            onClick={() => nextQuiestion()}
+          ></div>
+        )}
+
+        {!isNextShown && (
+          <div
+            className={"icon i-rubberduck"}
+            onClick={() => revealCorrectAnswer()}
+          ></div>
+        )}
+      </div>
+
+    </div>
+  );
 };
