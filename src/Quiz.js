@@ -71,7 +71,8 @@ export const QuizWidget = ({ dict, baseURL }) => {
     var copy = recentWordsID;
 
     // Maintain the lenght
-    if (recentWordsID.length === (dict.length / 2) - 1) {
+    console.log( (dict.length / 2) - 1)
+    if (recentWordsID.length > ((dict.length / 2) - 1)) {
       copy.shift();
     }
 
