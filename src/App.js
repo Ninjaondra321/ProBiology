@@ -211,13 +211,7 @@ function App() {
     STYLE: "gradient",
     THEME: "light"}))
 
-
-    localStorage.setItem(1, JSON.stringify({id: "1",
-    listURL: "https://raw.githubusercontent.com/Ninjaondra321/pro-biology-sources/master/pro-karla-prohlizece/info.json",
-    rocnik: "2.Roč",
-    title: "ProKarla - Prohlížeče"}))
-
-    localStorage.setItem(2, JSON.stringify({id: "2",
+    localStorage.setItem("PB-1", JSON.stringify({id: "PB-1",
     listURL: "https://raw.githubusercontent.com/Ninjaondra321/pro-biology-sources/master/hymz-nedokonala-premena/info.json",
     rocnik: "2.Roč",
     title: "Hmyz - nedokonala"}))

@@ -26,12 +26,12 @@ export const NewLessonCard = () => {
     let i = 0
     while (true) {
       i++;
-      if (!(i in localStorage)) {
+      if (!("PB-" + toString(i) in localStorage)) {
         break
       }
     }
 
-  return <Link to={"/edit/" + i} New='false'>
+  return <Link to={"/edit/PB" + i} New='false'>
   <div className="lesson-card-one-item center bg-green">
       <div className="icon icon-large i-plus"></div>
   </div>

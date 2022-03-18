@@ -29,22 +29,23 @@ const Home = () => {
   const PakVymazList = [];
 
   Object.keys(localStorage).forEach(function (key) {
-    try {
-      let xd = localStorage.getItem(key);
-      PakVymazList.push(JSON.parse(xd));
-      //PakVymazList.push(JSON.stringify(xd))
-    } catch (error) {
-      console.log("nelze jsonifikovat");
+
+    if  (key.includes('PB')) {
+      PakVymazList.push(JSON.parse(localStorage.getItem(key)))
     }
+
   });
 
-  function filterFunction(xx) {
-    return (
-      !!xx.id &&
-      xx.rocnik.includes(LanguageFilter) &&
-      xx.title.toLowerCase().includes(NameFilter.toLowerCase())
-    );
-  }
+
+    
+    
+    function filterFunction(xx) {
+      return (
+        !!xx.id &&
+        xx.rocnik.includes(LanguageFilter) &&
+        xx.title.toLowerCase().includes(NameFilter.toLowerCase())
+        );
+  } 
 
   function getTimee() {
     var time = new Date();
