@@ -40,11 +40,16 @@ const Home = () => {
     
     
     function filterFunction(xx) {
-      return (
-        !!xx.id &&
-        xx.rocnik.includes(LanguageFilter) &&
-        xx.title.toLowerCase().includes(NameFilter.toLowerCase())
-        );
+      try {
+        return (
+          !!xx.id &&
+          xx.rocnik.includes(LanguageFilter) &&
+          xx.title.toLowerCase().includes(NameFilter.toLowerCase())
+          );
+        
+      } catch (error) {
+        console.log('Probléémmm')
+      }
   } 
 
   function getTimee() {

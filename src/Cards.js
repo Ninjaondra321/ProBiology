@@ -22,16 +22,19 @@ export const LessonCard = ({id, title, language}) => {
 
 export const NewLessonCard = () => {
 
-    // Generate id
+  function getNewId () {
+
     let i = 0
     while (true) {
       i++;
-      if (!("PB-" + toString(i) in localStorage)) {
-        break
+      if (!("PB-" + i in localStorage)) {
+        return i
       }
     }
+  }
 
-  return <Link to={"/edit/PB" + i} New='false'>
+
+  return <Link to={"/edit/PB-" + getNewId()} >
   <div className="lesson-card-one-item center bg-green">
       <div className="icon icon-large i-plus"></div>
   </div>
