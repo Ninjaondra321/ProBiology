@@ -215,6 +215,17 @@ function App() {
     listURL: "https://raw.githubusercontent.com/Ninjaondra321/pro-biology-sources/master/hymz-nedokonala-premena/info.json",
     rocnik: "2.Roč",
     title: "Hmyz - nedokonala"}))
+
+    localStorage.setItem("PB-2", JSON.stringify({id: "PB-2",
+    listURL: "https://raw.githubusercontent.com/Ninjaondra321/pro-biology-sources/master/herbar-1/info.json",
+    rocnik: "2.Roč",
+    title: "Herbář 1"}))
+
+    localStorage.setItem("PB-3", JSON.stringify({id: "PB-3",
+    listURL: "https://raw.githubusercontent.com/Ninjaondra321/pro-biology-sources/master/herbar-duben/info.json",
+    rocnik: "2.Roč",
+    title: "Herbář duben"}))
+
   }
 
   
